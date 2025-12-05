@@ -1,0 +1,50 @@
+#include "aoc.hpp"
+
+size_t countFresh(std::vector<size_t>& interval) {
+    return interval[1] - interval[0] + 1;
+}
+
+int main() {
+    std::string raw = aoc::readStdinAll();
+    aoc::trim(raw);
+    if (raw.empty()) {
+        std::cerr << "Warning: no input on stdin.\n";
+    }
+    // extract and organize the relevant data from the input
+    std::vector<std::string> lines = aoc::split(raw, "\n");
+    std::vector<std::vector<size_t>> intervals;
+    std::vector<std::vector<size_t>> mergedIntervals;
+    for (std::string line : lines) {
+        if (line.find('-') != std::string::npos)  {
+            std::vector<std::string> interval = aoc::split(line, "-");
+            size_t start = std::stoull(interval[0]);
+            size_t end = std::stoull(interval[1]);
+            intervals.push_back({start, end});
+        }
+    }
+
+    // sort in ascending
+    std::sort(intervals.begin(), intervals.end(), [](const std::vector<size_t>& a, const std::vector<size_t>& b) {
+        return a[0] < b[0]; // if true vec a comes before vec b
+    });
+
+    // merge the intervals that were overlapping
+    mergedIntervals.push_back({intervals[0][0], intervals[0][1]});
+    for (size_t i = 1; i < intervals.size(); i++) {
+        if (intervals[i][0] <= mergedIntervals[mergedIntervals.size() - 1][1]) {
+            if (mergedIntervals[mergedIntervals.size() - 1][1] < intervals[i][1]) // check if new bound is higher than old
+                mergedIntervals[mergedIntervals.size() - 1][1] = intervals[i][1]; // increasing the previous interval's upperbound
+        }
+        else {
+            mergedIntervals.push_back(intervals[i]);
+        }
+    }
+
+    size_t ans = 0;
+    for (std::vector<size_t> interval : mergedIntervals) {
+        ans += countFresh(interval);
+    }
+    std::cout << ans;
+
+    return 0;
+}
