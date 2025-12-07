@@ -5,7 +5,7 @@ size_t countFresh(std::vector<size_t>& interval) {
 }
 
 int main() {
-    std::string raw = aoc::readStdinAll();
+    std::string raw = aoc::read_stdin_all();
     aoc::trim(raw);
     if (raw.empty()) {
         std::cerr << "Warning: no input on stdin.\n";

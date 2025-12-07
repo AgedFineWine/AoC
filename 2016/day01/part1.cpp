@@ -60,7 +60,7 @@ void findNewCoordinate(std::unique_ptr<Coordinate>& old, int dist, Direction fac
 
 int main() {
     // Read full input from stdin (paste the puzzle input and EOF/ctrl-D).
-    std::string raw = aoc::readStdinAll();
+    std::string raw = aoc::read_stdin_all();
     aoc::trim(raw);
     if (raw.empty()) {
         std::cerr << "Warning: no input on stdin.\n";

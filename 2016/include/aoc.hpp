@@ -18,7 +18,7 @@ namespace aoc {
  * @return Vector where each element is a single line from the file.
  *         Returns an empty vector when the file cannot be opened or is empty.
  */
-inline std::vector<std::string> readLines(const std::string& path) {
+inline std::vector<std::string> read_lines(const std::string& path) {
     std::ifstream in(path);
     std::vector<std::string> lines;
     std::string line;
@@ -33,7 +33,7 @@ inline std::vector<std::string> readLines(const std::string& path) {
  * @return File contents as a string. If the file can't be opened the
  *         returned string will be empty.
  */
-inline std::string readAll(const std::string& path) {
+inline std::string read_all(const std::string& path) {
     std::ifstream in(path);
     std::ostringstream ss;
     ss << in.rdbuf();
@@ -46,7 +46,7 @@ inline std::string readAll(const std::string& path) {
  * Useful for reading puzzle input pasted into stdin instead of reading from
  * a file. Returns an empty string if no data is available on stdin.
  */
-inline std::string readStdinAll() {
+inline std::string read_stdin_all() {
     std::ostringstream ss;
     ss << std::cin.rdbuf();
     return ss.str();
@@ -77,7 +77,7 @@ inline std::vector<std::string> split(const std::string &s, const std::string &d
     return out;
 }
 
-inline int parseToInt(std::string s) {
+inline int parse_to_int(std::string s) {
     try {
         int num = std::stoi(s);
         return num;
@@ -95,7 +95,7 @@ inline int parseToInt(std::string s) {
  * @param lines Vector of strings, each expected to contain a decimal integer.
  * @return Vector of parsed integers in the same order as non-empty input lines.
  */
-inline std::vector<int> linesToInts(const std::vector<std::string>& lines) {
+inline std::vector<int> lines_to_ints(const std::vector<std::string>& lines) {
     std::vector<int> out;
     out.reserve(lines.size());
     for (auto &l : lines) if (!l.empty()) out.push_back(std::stoi(l));

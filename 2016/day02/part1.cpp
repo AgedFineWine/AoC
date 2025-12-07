@@ -18,7 +18,7 @@ void addCode(int grid[3][3], const int& x, const int& y, std::string& code) {
 }
 
 int main() {
-    std::string raw = aoc::readStdinAll();
+    std::string raw = aoc::read_stdin_all();
     aoc::trim(raw);
     if (raw.empty()) {
         std::cerr << "Warning: no input on stdin.\n";

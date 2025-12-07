@@ -13,7 +13,7 @@ std::vector<size_t> findLargest(std::vector<size_t>& bank, size_t& firstIndex, s
 }
 
 int main() {
-    std::string raw = aoc::readStdinAll();
+    std::string raw = aoc::read_stdin_all();
     aoc::trim(raw);
     if (raw.empty()) {
         std::cerr << "Warning: no input on stdin.\n";
