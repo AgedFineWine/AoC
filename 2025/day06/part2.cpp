@@ -1,7 +1,7 @@
 #include "aoc.hpp"
 
 size_t combineBuffer(char& op, std::vector<size_t>& buffer) {
-    size_t ans = -1;
+    size_t ans = 0;
     if (op == '*') {
         ans = 1;
         for (size_t x : buffer) {
