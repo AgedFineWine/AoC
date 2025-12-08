@@ -97,6 +97,18 @@ inline std::vector<std::string> split(const std::string &s, const std::string &d
     }
     return out;
 }
+inline std::vector<std::string> split(const std::string& s, const std::regex& re) {
+    std::sregex_token_iterator it(s.begin(), s.end(), re, -1);  // -1 means split by the delimiter
+    std::sregex_token_iterator end;
+
+    std::vector<std::string> result;
+    for (; it != end; it++) {
+        result.push_back(it->str());  // Push the substring to the result vector
+    }
+
+    return result;
+}
+
 
 inline int parse_to_int(std::string s) {
     try {
