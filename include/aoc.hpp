@@ -90,8 +90,8 @@ inline std::vector<std::string> split(const std::string& s, const std::regex& re
  * the body with from_chars/stoull/stoll based on your needs.
  */
 template <typename T>
-inline std::vector<T> lines_to_ints(const std::vector<std::string>& lines) {
-    static_assert(std::is_integral<T>::value, "T must be an integral type");
+inline std::vector<T> lines_to_numbers(const std::vector<std::string>& lines) {
+    static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type (integral or floating point)");
 
     std::vector<T> out;
     out.reserve(lines.size());
@@ -100,11 +100,14 @@ inline std::vector<T> lines_to_ints(const std::vector<std::string>& lines) {
         if (l.empty()) continue;
 
         try {
-            if constexpr (std::is_unsigned<T>::value) {
-                // Use stoull for unsigned types
+            if constexpr (std::is_floating_point<T>::value) {
+                // Use std::stod for floating-point types (e.g., double, float)
+                out.push_back(static_cast<T>(std::stod(l)));
+            } else if constexpr (std::is_unsigned<T>::value) {
+                // Use std::stoull for unsigned types (e.g., size_t, unsigned long long)
                 out.push_back(static_cast<T>(std::stoull(l)));
             } else {
-                // Use stoll for signed types
+                // Use std::stoll for signed types (e.g., long long, int)
                 out.push_back(static_cast<T>(std::stoll(l)));
             }
         } catch (const std::invalid_argument& e) {
