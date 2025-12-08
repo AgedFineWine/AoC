@@ -10,6 +10,7 @@
 #include <cmath>
 #include <stack>
 #include <queue>
+#include <regex>
 
 namespace aoc {
 /**
