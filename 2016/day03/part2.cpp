@@ -15,7 +15,8 @@ int main() {
     std::vector<std::vector<size_t>> grid;
     for (std::string& x : lines) {
         aoc::trim(x);
-        std::vector<std::string> v = aoc::split(x, "  ");
+        std::regex re("\\s+");
+        std::vector<std::string> v = aoc::split(x, re);
         std::vector<size_t> legs;
         for (std::string& j : v) {
             try{
@@ -27,18 +28,11 @@ int main() {
         grid.push_back(legs);
     }
 
-    int col = 0;
     size_t ans = 0;
-    std::vector<size_t> buffer;
-    for (int j = 0; j < 3; j++) {
-        col = 0;
-        for (size_t i = 0; i < grid.size(); i++) {
-            if (buffer.size() != 3)
-                buffer.push_back(grid[i][col]);
-            if (is_triangle(buffer)) {
-                ans++;
-                buffer.clear();
-            }
+    for (int col = 0; col < 3; col++) {
+        for (size_t i = 0; i < grid.size(); i+=3) {
+            std::vector<size_t> buffer = {grid[i][col], grid[i+1][col], grid[i+2][col]};
+            if (is_triangle(buffer)) ans++;
         }
     }
 
