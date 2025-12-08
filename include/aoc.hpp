@@ -33,35 +33,6 @@ struct pair_hash {
 };
 
 /**
- * Read a text file into a vector of lines.
- *
- * @param path Path to the input file.
- * @return Vector where each element is a single line from the file.
- *         Returns an empty vector when the file cannot be opened or is empty.
- */
-inline std::vector<std::string> read_lines(const std::string& path) {
-    std::ifstream in(path);
-    std::vector<std::string> lines;
-    std::string line;
-    while (std::getline(in, line)) lines.push_back(line);
-    return lines;
-}
-
-/**
- * Read an entire file into a single string.
- *
- * @param path Path to the input file.
- * @return File contents as a string. If the file can't be opened the
- *         returned string will be empty.
- */
-inline std::string read_all(const std::string& path) {
-    std::ifstream in(path);
-    std::ostringstream ss;
-    ss << in.rdbuf();
-    return ss.str();
-}
-
-/**
  * Read all data from standard input into a string.
  *
  * Useful for reading puzzle input pasted into stdin instead of reading from
@@ -109,29 +80,42 @@ inline std::vector<std::string> split(const std::string& s, const std::regex& re
     return result;
 }
 
-
-inline int parse_to_int(std::string s) {
-    try {
-        int num = std::stoi(s);
-        return num;
-    } catch (const std::invalid_argument& e) {
-        std::cerr << "Invalid argument: " << s << std::endl;
-        return -1;
-    }
-}
-
 /**
- * Convert a list of numeric strings to a vector of ints.
+ * Convert a list of numeric strings to a vector of a numeric type.
  *
  * Empty strings in the input are skipped.
  *
- * @param lines Vector of strings, each expected to contain a decimal integer.
- * @return Vector of parsed integers in the same order as non-empty input lines.
+ * Note: this implementation uses std::stoll and casts to T. For unsigned
+ * types you can still use this (values must fit into long long) or replace
+ * the body with from_chars/stoull/stoll based on your needs.
  */
-inline std::vector<int> lines_to_ints(const std::vector<std::string>& lines) {
-    std::vector<int> out;
+template <typename T>
+inline std::vector<T> lines_to_ints(const std::vector<std::string>& lines) {
+    static_assert(std::is_integral<T>::value, "T must be an integral type");
+
+    std::vector<T> out;
     out.reserve(lines.size());
-    for (auto &l : lines) if (!l.empty()) out.push_back(std::stoi(l));
+
+    for (const auto& l : lines) {
+        if (l.empty()) continue;
+
+        try {
+            if constexpr (std::is_unsigned<T>::value) {
+                // Use stoull for unsigned types
+                out.push_back(static_cast<T>(std::stoull(l)));
+            } else {
+                // Use stoll for signed types
+                out.push_back(static_cast<T>(std::stoll(l)));
+            }
+        } catch (const std::invalid_argument& e) {
+            // Handle invalid input (non-numeric string)
+            std::cerr << "Invalid argument: " << e.what() << " for string: " << l << std::endl;
+        } catch (const std::out_of_range& e) {
+            // Handle overflow (value too large)
+            std::cerr << "Out of range: " << e.what() << " for string: " << l << std::endl;
+        }
+    }
+
     return out;
 }
 
